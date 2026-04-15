@@ -4,18 +4,18 @@ export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy';
 
 const SIZE_MAP: Record<AvatarSize, { box: number; font: string; dot: number }> = {
-  xs: { box: 24, font: 'var(--font-size-xs)',   dot: 6  },
-  sm: { box: 32, font: 'var(--font-size-sm)',   dot: 8  },
+  xs: { box: 24, font: 'var(--font-size-xs)', dot: 6 },
+  sm: { box: 32, font: 'var(--font-size-sm)', dot: 8 },
   md: { box: 40, font: 'var(--font-size-base)', dot: 10 },
-  lg: { box: 56, font: 'var(--font-size-xl)',   dot: 12 },
-  xl: { box: 72, font: 'var(--font-size-2xl)',  dot: 14 },
+  lg: { box: 56, font: 'var(--font-size-xl)', dot: 12 },
+  xl: { box: 72, font: 'var(--font-size-2xl)', dot: 14 },
 };
 
 const STATUS_COLOR: Record<AvatarStatus, string> = {
-  online:  'var(--color-semantic-success-default)',
+  online: 'var(--color-semantic-success-default)',
   offline: 'var(--color-neutral-400)',
-  away:    'var(--color-semantic-warning-default)',
-  busy:    'var(--color-semantic-error-default)',
+  away: 'var(--color-semantic-warning-default)',
+  busy: 'var(--color-semantic-error-default)',
 };
 
 export interface AvatarProps {
@@ -129,7 +129,7 @@ export const AvatarGroup = ({
   style,
 }: AvatarGroupProps) => {
   const { box } = SIZE_MAP[size];
-  const visible  = avatars.slice(0, max);
+  const visible = avatars.slice(0, max);
   const overflow = avatars.length - max;
 
   const groupStyle: CSSProperties = {
