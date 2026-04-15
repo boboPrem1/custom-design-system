@@ -44,7 +44,7 @@ export const Alert = ({
     padding: 'var(--spacing-4)',
     borderRadius: variant === 'banner' ? 0 : 'var(--radius-lg)',
     border: variant === 'banner' ? 'none' : `1px solid ${s.border}`,
-    borderLeft: variant === 'banner' ? `4px solid ${s.border}` : undefined,
+    borderLeft: `4px solid ${s.border}`,
     background: s.bg,
     width: '100%',
     boxSizing: 'border-box',
