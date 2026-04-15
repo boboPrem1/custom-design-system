@@ -109,6 +109,38 @@ const ICONS: Record<string, Record<IconStyle, string>> = {
     filled:
       'M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01',
   },
+  menu: {
+    outline: 'M3 6h18M3 12h18M3 18h18',
+    filled:  'M3 6h18M3 12h18M3 18h18',
+  },
+  link: {
+    outline: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
+    filled:  'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
+  },
+  code: {
+    outline: 'M16 18l6-6-6-6M8 6l-6 6 6 6',
+    filled:  'M16 18l6-6-6-6M8 6l-6 6 6 6',
+  },
+  filter: {
+    outline: 'M22 3H2l8 9.46V19l4 2v-8.54L22 3z',
+    filled:  'M22 3H2l8 9.46V19l4 2v-8.54L22 3z',
+  },
+  chart: {
+    outline: 'M18 20V10M12 20V4M6 20v-6',
+    filled:  'M18 20V10M12 20V4M6 20v-6',
+  },
+  drag: {
+    outline: 'M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01',
+    filled:  'M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01',
+  },
+  trend_up: {
+    outline: 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+    filled:  'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+  },
+  trend_down: {
+    outline: 'M23 18l-9.5-9.5-5 5L1 6M17 18h6v-6',
+    filled:  'M23 18l-9.5-9.5-5 5L1 6M17 18h6v-6',
+  },
 };
 
 export type IconName = keyof typeof ICONS;
