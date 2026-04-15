@@ -1,0 +1,250 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.section{margin-bottom:1.5rem}
+.level-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;user-select:none}
+.level-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.level-title{font-size:13px;font-weight:500;color:var(--color-text-primary);letter-spacing:.04em;text-transform:uppercase}
+.level-count{font-size:11px;color:var(--color-text-tertiary);margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.chip{padding:7px 10px;border-radius:8px;font-size:12px;color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:all .15s;background:var(--color-background-primary);line-height:1.3}
+.chip:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.chip .chip-label{font-weight:500;display:block}
+.chip .chip-sub{color:var(--color-text-tertiary);font-size:11px;margin-top:2px;display:block}
+.chip.active{border-color:var(--chip-accent);background:var(--chip-bg)}
+.panel{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px 16px;margin-top:10px;display:none}
+.panel.open{display:block}
+.panel-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.panel-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px}
+.panel-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ptag{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.config-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px 16px;margin-bottom:1.5rem}
+.config-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
+.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.token-row{display:flex;align-items:center;gap:8px}
+.token-swatch{width:22px;height:22px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);flex-shrink:0}
+.token-name{font-size:11px;color:var(--color-text-secondary)}
+.token-val{font-size:11px;color:var(--color-text-tertiary);margin-left:auto;font-family:var(--font-mono)}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.2rem 0}
+.coverage{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.badge.web{background:var(--color-background-info);color:var(--color-text-info)}
+.badge.mobile{background:var(--color-background-success);color:var(--color-text-success)}
+.badge.graphic{background:var(--color-background-warning);color:var(--color-text-warning)}
+</style>
+
+<div class="wrap">
+
+<div class="config-box">
+  <div class="config-title">Config minimale — tout dérive de ces 5 valeurs</div>
+  <div class="token-grid">
+    <div class="token-row"><div class="token-swatch" style="background:#6C63FF"></div><span class="token-name">Primary</span><span class="token-val">#6C63FF</span></div>
+    <div class="token-row"><div class="token-swatch" style="background:#0F0F2D"></div><span class="token-name">Secondary</span><span class="token-val">#0F0F2D</span></div>
+    <div class="token-row"><div class="token-swatch" style="background:#00D4A0"></div><span class="token-name">Accent</span><span class="token-val">#00D4A0</span></div>
+    <div class="token-row"><div class="token-swatch" style="background:white;border:1px solid var(--color-border-secondary)"></div><span class="token-name">Surface</span><span class="token-val">auto-dérivé</span></div>
+    <div class="token-row"><div class="token-swatch" style="background:linear-gradient(135deg,#6C63FF,#00D4A0)"></div><span class="token-name">Heading font</span><span class="token-val">Inter</span></div>
+    <div class="token-row"><div class="token-swatch" style="background:linear-gradient(135deg,#999,#555)"></div><span class="token-name">Body font</span><span class="token-val">Inter</span></div>
+  </div>
+</div>
+
+<div class="coverage">
+  <span style="font-size:12px;color:var(--color-text-secondary);line-height:24px">Cibles :</span>
+  <span class="badge web">🌐 Web</span>
+  <span class="badge mobile">📱 Mobile</span>
+  <span class="badge graphic">🎨 Graphique</span>
+</div>
+
+<div id="levels"></div>
+</div>
+
+<script>
+const levels=[
+  {
+    id:'tokens',label:'Tokens',color:'#888780',
+    desc:'Source unique de vérité. Tout le reste en dérive automatiquement.',
+    items:[
+      {name:'Couleurs',sub:'primary · secondary · accent · neutral · semantic',tags:['web','mobile','graphic'],detail:'Palette complète : primary (9 teintes), secondary, accent, + neutrals (gray-50→950) + semantic (success, warning, error, info). Tout dérive du triplet de base via HSL manipulation.'},
+      {name:'Typographie',sub:'scale · weight · line-height · tracking',tags:['web','mobile','graphic'],detail:'Heading font + Body font. Scale fluide: xs(12) sm(14) base(16) lg(18) xl(20) 2xl(24) 3xl(30) 4xl(36) 5xl(48) 6xl(60). Poids: 400 · 500 · 700.'},
+      {name:'Espacement',sub:'4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128',tags:['web','mobile'],detail:'Grille de 4px. Tout spacing est un multiple de 4. Utilisé pour padding, margin, gap, inset.'},
+      {name:'Radius',sub:'none · sm(4) · md(8) · lg(12) · xl(16) · full',tags:['web','mobile'],detail:'5 niveaux + full(9999). Cohérence des arrondis sur tous les composants.'},
+      {name:'Ombres',sub:'sm · md · lg · xl · inner',tags:['web'],detail:'4 niveaux d\'élévation + inner shadow. Utilisés sur cards, modals, dropdowns.'},
+      {name:'Motion',sub:'durée · easing · delay',tags:['web','mobile'],detail:'fast(100ms) · base(200ms) · slow(350ms). Easing: ease-out (entrée), ease-in (sortie), spring (feedback).'},
+      {name:'Breakpoints',sub:'sm · md · lg · xl · 2xl',tags:['web'],detail:'640 · 768 · 1024 · 1280 · 1536px. Fluide entre les breakpoints via clamp().'},
+      {name:'Opacité',sub:'disabled · overlay · muted',tags:['web','mobile'],detail:'disabled:40% · muted:60% · overlay:50%. Standards cohérents pour tous les états.'},
+    ]
+  },
+  {
+    id:'atoms',label:'Atoms',color:'#6C63FF',
+    desc:'Briques indivisibles. Chaque atom est autonome et stylé par les tokens uniquement.',
+    items:[
+      {name:'Heading',sub:'H1→H6',tags:['web','mobile','graphic'],detail:'6 niveaux hiérarchiques. Taille, poids et line-height définis par les tokens typo. Variants: display (très grand, graphic), editorial, UI.'},
+      {name:'Body text',sub:'base · sm · xs · lead',tags:['web','mobile','graphic'],detail:'4 tailles. Variant lead (intro paragraphe). Couleurs: primary, secondary, tertiary, disabled, link.'},
+      {name:'Label',sub:'form · caption · overline',tags:['web','mobile'],detail:'Pour inputs, legends, annotations. Overline (uppercase tracking) pour catégories. Caption pour footnotes.'},
+      {name:'Code',sub:'inline · block',tags:['web'],detail:'Inline: fond subtle, mono font, px 4px. Block: numérotation de lignes, copy button, syntax coloring placeholder.'},
+      {name:'Icon',sub:'16 · 20 · 24 · 32',tags:['web','mobile','graphic'],detail:'4 tailles standard. Colore via currentColor (hérite du parent). 2 styles: outline · filled. Set recommandé: Lucide ou Phosphor.'},
+      {name:'Button',sub:'primary · secondary · ghost · danger · link',tags:['web','mobile'],detail:'5 variants. 3 tailles (sm/md/lg). États: default, hover, active, disabled, loading. Icon-only + icon+label.'},
+      {name:'Input',sub:'text · email · password · number · search',tags:['web','mobile'],detail:'États: default, focus, error, disabled, readonly. Taille fixe 40px. Avec ou sans icône préfixe/suffixe.'},
+      {name:'Textarea',sub:'auto-resize · fixed',tags:['web','mobile'],detail:'Resize vertical ou auto-expand selon contenu. Character count optionnel.'},
+      {name:'Checkbox',sub:'unchecked · checked · indeterminate',tags:['web','mobile'],detail:'3 états + disabled. Animation de check. Label inline ou externe.'},
+      {name:'Radio',sub:'group · single',tags:['web','mobile'],detail:'Toujours en groupe. Vertical ou horizontal. Label inline.'},
+      {name:'Toggle',sub:'on · off · loading',tags:['web','mobile'],detail:'3 états + disabled. Animation spring du thumb. Avec label optionnel.'},
+      {name:'Select',sub:'single · multi',tags:['web','mobile'],detail:'Native sur mobile. Custom sur desktop avec dropdown. États identiques à Input.'},
+      {name:'Badge',sub:'filled · outline · dot',tags:['web','mobile','graphic'],detail:'Semantic: success · warning · error · info · neutral. Tailles: sm · md. Avec ou sans icône. Dot = indicateur de statut seul.'},
+      {name:'Avatar',sub:'image · initials · icon',tags:['web','mobile','graphic'],detail:'3 sources. 5 tailles (xs/sm/md/lg/xl). Indicator de statut (online/offline/busy). Group d\'avatars avec overflow.'},
+      {name:'Divider',sub:'horizontal · vertical',tags:['web','mobile'],detail:'Avec ou sans label centré. Épaisseur 0.5px ou 1px. Variant dashed.'},
+      {name:'Spinner',sub:'sm · md · lg',tags:['web','mobile'],detail:'3 tailles. Couleur héritée (currentColor). Overlay version pour boutons.'},
+      {name:'Skeleton',sub:'text · rect · circle',tags:['web','mobile'],detail:'3 formes de base. Animation shimmer. À composer pour imiter la mise en page réelle.'},
+      {name:'Tooltip',sub:'top · bottom · left · right',tags:['web'],detail:'4 directions. Delay 300ms. Max-width 280px. Dark by default.'},
+      {name:'Link',sub:'inline · standalone',tags:['web','mobile'],detail:'Inline: dans du texte (underline). Standalone: avec icône externe optionnelle. Visited state.'},
+      {name:'Image',sub:'responsive · lazy · blur-up',tags:['web','mobile','graphic'],detail:'Ratio boxes pour éviter CLS. Aspect ratios: 1:1, 4:3, 16:9, 3:2. Fallback alt placeholder.'},
+      {name:'Kbd',sub:'single · combo',tags:['web'],detail:'Pour documenter raccourcis clavier. Combinaisons: Cmd+K, Ctrl+Shift+P.'},
+      {name:'Chip / Tag',sub:'filled · outline · removable',tags:['web','mobile'],detail:'Variant removable avec × button. Clickable (filtre actif). Group avec scroll horizontal sur mobile.'},
+    ]
+  },
+  {
+    id:'molecules',label:'Molecules',color:'#0F6E56',
+    desc:'Assemblages d\'atoms avec une fonction claire et unique.',
+    items:[
+      {name:'Form field',sub:'label + input + hint + error',tags:['web','mobile'],detail:'L\'unité de formulaire complète. Label au-dessus, hint en-dessous, message d\'erreur en rouge. Required indicator (*).'},
+      {name:'Search bar',sub:'input + icon + clear',tags:['web','mobile'],detail:'Input avec icône loupe préfixe et bouton clear. Variant avec filtre inline. Résultats en dropdown optionnel.'},
+      {name:'Dropdown',sub:'trigger + menu',tags:['web','mobile'],detail:'Trigger (button/input) + liste d\'items. Keyboard navigation. Fermeture click-outside. Groupes séparés.'},
+      {name:'Date picker',sub:'input + calendar popup',tags:['web','mobile'],detail:'Input formaté + calendrier en popup. Range picker (date de début + fin). Mobile: native ou custom.'},
+      {name:'File upload',sub:'dropzone · button · preview',tags:['web','mobile'],detail:'Drag & drop area. Click to browse. Preview des fichiers uploadés. Progress bar par fichier.'},
+      {name:'Tag input',sub:'input + tag list',tags:['web'],detail:'Saisie libre avec ajout par Enter/virgule. Suppression par Backspace ou ×. Autocomplétion optionnelle.'},
+      {name:'Button group',sub:'segmented · toolbar',tags:['web','mobile'],detail:'Boutons joints (segmented control). Sélection single ou multiple. Taille cohérente entre items.'},
+      {name:'Breadcrumb',sub:'with separators',tags:['web'],detail:'Séparateurs / ou >. Truncation sur items longs. Dernier item non-cliquable (current).'},
+      {name:'Pagination',sub:'numbered · prev-next',tags:['web'],detail:'Numérotée avec ellipsis. Compact (juste prev/next) pour mobile. Items per page select.'},
+      {name:'Rating',sub:'stars · custom',tags:['web','mobile'],detail:'1-5 étoiles. Demi-étoile. Read-only ou interactif. Accessible (keyboard + screen reader).'},
+      {name:'Progress bar',sub:'linear · circular',tags:['web','mobile'],detail:'Linéaire avec label %. Circulaire pour dashboard metrics. Animated ou statique. Indeterminate variant.'},
+      {name:'Alert',sub:'info · success · warning · error',tags:['web','mobile'],detail:'4 variants semantic. Avec icône. Dismissable. Inline (dans formulaire) ou banner (en haut de page).'},
+      {name:'Toast',sub:'bottom · top + stack',tags:['web','mobile'],detail:'Apparaît en coin. Auto-dismiss (3-5s). Stack de plusieurs toasts. Actions inline (Undo).'},
+      {name:'Card (base)',sub:'header · body · footer',tags:['web','mobile','graphic'],detail:'Container de base. Header optionnel (titre + action). Footer optionnel (boutons). Clickable variant.'},
+      {name:'List item',sub:'icon · text · meta · action',tags:['web','mobile'],detail:'Icon/avatar + titre + sous-titre + badge/meta + action (bouton ou chevron). Taille compacte et confortable.'},
+      {name:'Stat card',sub:'label + value + trend',tags:['web','graphic'],detail:'Metric card: icône + label muted + valeur large + indicator de tendance (↑↓). Pour dashboards.'},
+      {name:'Input group',sub:'prefix + input + suffix',tags:['web'],detail:'Input avec addon texte ou bouton (ex: URL avec "https://", prix avec "€", search avec bouton Go).'},
+      {name:'Menu item',sub:'icon · label · shortcut · arrow',tags:['web','mobile'],detail:'Item de menu contextuel. Icône gauche + label + raccourci clavier + flèche sous-menu. Destructive variant.'},
+      {name:'Stepper input',sub:'- value +',tags:['web','mobile'],detail:'Bouton minus + input numérique + bouton plus. Min/max. Décrémentation/incrémentation continue au hold.'},
+    ]
+  },
+  {
+    id:'organisms',label:'Organisms',color:'#993C1D',
+    desc:'Sections d\'interface autonomes avec leur propre logique et état interne.',
+    items:[
+      {name:'Navbar',sub:'logo · nav · actions',tags:['web'],detail:'Logo + liens navigation + actions (search, notif, avatar). Sticky ou fixed. Mobile: hamburger + drawer. Mega-menu optionnel.'},
+      {name:'Sidebar',sub:'nav · sections · collapse',tags:['web'],detail:'Navigation verticale. Groupes de liens avec icons. Collapsible (icon-only mode). Active state. User info en bas.'},
+      {name:'Tab bar',sub:'bottom navigation',tags:['mobile'],detail:'Navigation principale mobile. 3-5 items. Active indicator. Badge de notification. Icône + label ou icône seule.'},
+      {name:'Footer',sub:'links · legal · social',tags:['web','graphic'],detail:'Multi-colonne (desktop) ou accordéon (mobile). Liens, réseaux sociaux, copyright, langues.'},
+      {name:'Data table',sub:'sort · filter · select · paginate',tags:['web'],detail:'En-têtes triables. Checkbox multi-sélection. Filtres column. Pagination intégrée. Actions sur sélection. Responsive (scroll ou stack).'},
+      {name:'Form',sub:'sections · validation · submit',tags:['web','mobile'],detail:'Multi-sections avec titres. Validation en temps réel + à la soumission. Submit button avec loading. Error summary en haut.'},
+      {name:'Modal',sub:'confirm · content · full',tags:['web','mobile'],detail:'3 tailles (sm/md/lg). Confirm dialog (1-2 actions). Content modal (scrollable). Full-screen sur mobile.'},
+      {name:'Drawer',sub:'left · right · bottom',tags:['web','mobile'],detail:'3 directions. Overlay avec fermeture click-outside. Bottom sheet sur mobile (swipe to close).'},
+      {name:'Tabs',sub:'horizontal · vertical · pills',tags:['web','mobile'],detail:'3 styles visuels. Scroll horizontal sur mobile. Lazy loading du contenu. Keyboard navigation.'},
+      {name:'Accordion',sub:'single · multiple',tags:['web','mobile'],detail:'Mode exclusif (1 ouvert max) ou libre. Animation d\'ouverture. Icône chevron animé.'},
+      {name:'Card grid',sub:'masonry · equal · list',tags:['web','mobile','graphic'],detail:'3 layouts. Responsive columns (CSS grid auto-fill). Loading skeleton. Empty state intégré.'},
+      {name:'Hero section',sub:'image · video · gradient',tags:['web','graphic'],detail:'Titre + sous-titre + CTA(s). Background: image, vidéo ou gradient. Centré ou divisé (texte + visuel).'},
+      {name:'Feature section',sub:'icons · alternating',tags:['web','graphic'],detail:'Liste de features avec icônes. Layout alterné (texte gauche/droite). 2-3-4 colonnes.'},
+      {name:'Pricing table',sub:'cards · toggle monthly/yearly',tags:['web','graphic'],detail:'2-4 plans. Toggle billing. Plan mis en avant. Feature checklist. CTA par plan.'},
+      {name:'Timeline',sub:'vertical · horizontal',tags:['web','graphic'],detail:'Events horodatés. Icônes de statut. Alternée (desktop) ou linéaire (mobile).'},
+      {name:'Chat / Feed',sub:'messages · threads',tags:['web','mobile'],detail:'Bulles de message (sent/received). Avatars. Timestamps. Réactions. Typing indicator.'},
+      {name:'Command palette',sub:'search + results',tags:['web'],detail:'Ouverture Cmd+K. Recherche temps réel. Groupes de résultats. Navigation clavier. Recent items.'},
+      {name:'Dashboard widgets',sub:'metric · chart · table · map',tags:['web'],detail:'Zone de drag & drop de widgets. 4 types de base. Resize. Header avec actions (refresh, fullscreen).'},
+      {name:'Empty state',sub:'icon · message · action',tags:['web','mobile'],detail:'Illustration (SVG simple) + titre + description + bouton CTA. Contextualisé selon la section.'},
+      {name:'Error state',sub:'404 · 500 · network',tags:['web','mobile'],detail:'3 types d\'erreurs avec illustrations distinctes. Message + action de récupération.'},
+    ]
+  },
+  {
+    id:'templates',label:'Templates',color:'#185FA5',
+    desc:'Mises en page complètes assemblant les organisms. Agnostiques du contenu réel.',
+    items:[
+      {name:'Dashboard',sub:'sidebar + header + grid',tags:['web'],detail:'Sidebar gauche + topbar + zone de contenu en grid. Responsive: sidebar collapsible, grid s\'adapte.'},
+      {name:'Auth',sub:'login · register · reset',tags:['web','mobile'],detail:'Layout centré (desktop) ou pleine page (mobile). Formulaire + illustration/brand. Multi-étapes pour register.'},
+      {name:'Article / Doc',sub:'prose + sidebar TOC',tags:['web','graphic'],detail:'Prose centré max-width 720px. TOC sticky à droite (desktop). Breadcrumb + meta (auteur, date). Navigation prev/next.'},
+      {name:'Settings',sub:'nav + content',tags:['web','mobile'],detail:'Navigation sections à gauche (tabs sur mobile). Content à droite. Footer avec Save/Cancel sticky.'},
+      {name:'Landing page',sub:'hero + features + pricing + CTA',tags:['web','graphic'],detail:'Full-page layout marketing. Sections empilées: Hero → Features → Social proof → Pricing → CTA finale → Footer.'},
+      {name:'Onboarding flow',sub:'steps + progress',tags:['web','mobile'],detail:'Multi-étapes avec progress bar. Chaque step = écran ou modal. Skip optionnel. Completion screen.'},
+      {name:'Mobile app screen',sub:'tab bar + content + FAB',tags:['mobile'],detail:'Status bar safe area. Tab bar en bas. Contenu scrollable. FAB (floating action button) optionnel.'},
+      {name:'Email template',sub:'header + content + footer',tags:['graphic'],detail:'Max-width 600px, inline CSS pour compatibilité. Header logo + hero image + contenu + footer légal.'},
+      {name:'Social post',sub:'1:1 · 9:16 · 16:9',tags:['graphic'],detail:'3 ratios pour Instagram/LinkedIn/YouTube. Fond coloré ou image. Logo + headline + CTA visuel.'},
+      {name:'Présentation',sub:'titre · contenu · data',tags:['graphic'],detail:'Slide de titre + slide de contenu + slide de données/chart. Maître slide avec zones configurables.'},
+    ]
+  },
+  {
+    id:'graphic',label:'Graphic extras',color:'#854F0B',
+    desc:'Composants spécifiques au design graphique — print, social, branding.',
+    items:[
+      {name:'Color palette',sub:'affichage système',tags:['graphic'],detail:'Grille des couleurs du système : primary + teintes, secondary, accent, neutrals, semantic. Hex + variable CSS.'},
+      {name:'Type specimen',sub:'toutes tailles & poids',tags:['graphic'],detail:'Affichage de tous les niveaux typographiques avec les tokens correspondants. À exporter comme référence.'},
+      {name:'Icon grid',sub:'set complet organisé',tags:['graphic'],detail:'Tous les icônes en grille 24×24. Catégorisés (navigation, action, statut, etc.). Export SVG/PNG.'},
+      {name:'Logo lockup',sub:'horizontal · vertical · icon',tags:['graphic'],detail:'3 variantes de logo avec zone de protection. Sur fond clair, foncé, coloré. Taille minimale.'},
+      {name:'Brand card',sub:'identité visuelle',tags:['graphic'],detail:'Récapitulatif de l\'identité : couleurs + typos + logo + ton. Document de référence pour collaborateurs.'},
+      {name:'Poster layout',sub:'A4 · A3 · format libre',tags:['graphic'],detail:'Grille à 12 colonnes. Zones titre, visuel, texte, CTA. Marges et gouttières configurables.'},
+      {name:'OG image',sub:'1200×630px',tags:['graphic'],detail:'Template Open Graph pour les previews de liens. Logo + titre dynamique + sous-titre + couleur de fond brand.'},
+    ]
+  },
+];
+
+const colorMap={tokens:'#888780',atoms:'#6C63FF',molecules:'#0F6E56',organisms:'#993C1D',templates:'#185FA5',graphic:'#854F0B'};
+const bgMap={tokens:'rgba(136,135,128,0.08)',atoms:'rgba(108,99,255,0.08)',molecules:'rgba(15,110,86,0.08)',organisms:'rgba(153,60,29,0.08)',templates:'rgba(24,95,165,0.08)',graphic:'rgba(133,79,11,0.08)'};
+const tagColors={'web':'var(--color-background-info)','mobile':'var(--color-background-success)','graphic':'var(--color-background-warning)'};
+const tagText={'web':'var(--color-text-info)','mobile':'var(--color-text-success)','graphic':'var(--color-text-warning)'};
+const tagLabel={'web':'🌐','mobile':'📱','graphic':'🎨'};
+
+let activeChip=null;
+
+function renderAll(){
+  const container=document.getElementById('levels');
+  container.innerHTML='';
+  levels.forEach(lv=>{
+    const sec=document.createElement('div');
+    sec.className='section';
+    sec.innerHTML=`
+      <div class="level-header">
+        <div class="level-dot" style="background:${colorMap[lv.id]}"></div>
+        <span class="level-title">${lv.label}</span>
+        <span class="level-count">${lv.items.length} composants</span>
+      </div>
+      <div class="grid" id="grid-${lv.id}"></div>
+      <div class="panel" id="panel-${lv.id}"></div>
+      ${lv.id!=='graphic'?'<hr class="divider">':''}
+    `;
+    container.appendChild(sec);
+    const grid=document.getElementById('grid-'+lv.id);
+    lv.items.forEach((item,i)=>{
+      const chip=document.createElement('div');
+      chip.className='chip';
+      chip.id=`chip-${lv.id}-${i}`;
+      chip.innerHTML=`<span class="chip-label">${item.name}</span><span class="chip-sub">${item.sub}</span>`;
+      chip.style.setProperty('--chip-accent',colorMap[lv.id]);
+      chip.style.setProperty('--chip-bg',bgMap[lv.id]);
+      chip.onclick=()=>showPanel(lv,item,chip);
+      grid.appendChild(chip);
+    });
+  });
+}
+
+function showPanel(lv,item,chipEl){
+  if(activeChip===chipEl){
+    chipEl.classList.remove('active');
+    const panel=document.getElementById('panel-'+lv.id);
+    panel.classList.remove('open');
+    activeChip=null;
+    return;
+  }
+  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.panel.open').forEach(p=>p.classList.remove('open'));
+  chipEl.classList.add('active');
+  activeChip=chipEl;
+  const panel=document.getElementById('panel-'+lv.id);
+  panel.classList.add('open');
+  const tagHtml=item.tags.map(t=>`<span class="ptag" style="background:${tagColors[t]};color:${tagText[t]};border:none">${tagLabel[t]} ${t}</span>`).join('');
+  panel.innerHTML=`
+    <div class="panel-title">${item.name}</div>
+    <div class="panel-desc">${item.detail}</div>
+    <div class="panel-tags">${tagHtml}</div>
+  `;
+}
+
+renderAll();
+</script>
