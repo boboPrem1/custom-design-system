@@ -54,8 +54,16 @@ export const Avatar = ({
 }: AvatarProps) => {
   const { box, font, dot } = SIZE_MAP[size];
 
-  const containerStyle: CSSProperties = {
+  const wrapperStyle: CSSProperties = {
     position: 'relative',
+    display: 'inline-flex',
+    width: box,
+    height: box,
+    flexShrink: 0,
+    ...style,
+  };
+
+  const containerStyle: CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,9 +76,7 @@ export const Avatar = ({
     fontFamily: 'var(--font-body)',
     fontSize: font,
     fontWeight: 'var(--font-weight-bold)' as unknown as number,
-    flexShrink: 0,
     userSelect: 'none',
-    ...style,
   };
 
   const imgStyle: CSSProperties = {
@@ -82,30 +88,33 @@ export const Avatar = ({
 
   const statusStyle: CSSProperties = {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: -(dot * 0.015),
+    right: -(dot * 0.015),
     width: dot,
     height: dot,
     borderRadius: '50%',
     background: status ? STATUS_COLOR[status] : 'transparent',
     border: '2px solid var(--color-surface-primary)',
     boxSizing: 'border-box',
+    zIndex: 1,
   };
 
   return (
-    <span className={className} style={containerStyle} title={alt || initials}>
-      {src ? (
-        <img src={src} alt={alt} style={imgStyle} />
-      ) : icon ? (
-        icon
-      ) : initials ? (
-        <span aria-hidden>{initials.slice(0, 2).toUpperCase()}</span>
-      ) : (
-        /* Silhouette SVG par défaut */
-        <svg viewBox="0 0 24 24" width={box * 0.55} height={box * 0.55} fill="currentColor">
-          <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" />
-        </svg>
-      )}
+    <span className={className} style={wrapperStyle} title={alt || initials}>
+      <span style={containerStyle}>
+        {src ? (
+          <img src={src} alt={alt} style={imgStyle} />
+        ) : icon ? (
+          icon
+        ) : initials ? (
+          <span aria-hidden>{initials.slice(0, 2).toUpperCase()}</span>
+        ) : (
+          /* Silhouette SVG par défaut */
+          <svg viewBox="0 0 24 24" width={box * 0.55} height={box * 0.55} fill="currentColor">
+            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" />
+          </svg>
+        )}
+      </span>
       {status && <span style={statusStyle} aria-label={status} />}
     </span>
   );
