@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fn } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Checkbox } from './Checkbox';
 
@@ -15,6 +16,7 @@ const meta = {
     checked: false,
     indeterminate: false,
     disabled: false,
+    onChange: fn(),
   },
 } satisfies Meta<typeof Checkbox>;
 

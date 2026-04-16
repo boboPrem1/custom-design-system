@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Chip } from './Chip';
 
 const meta = {
@@ -133,4 +134,50 @@ export const RemovableList: Story = {
       </div>
     );
   },
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickToggle: Story = {
+  args: { clickable: true, variant: 'outline', label: 'Toggle moi' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chip = canvas.getByRole('checkbox');
+    await expect(chip).toHaveAttribute('aria-checked', 'false');
+    await userEvent.click(chip);
+  },
+};
+
+export const KeyboardToggle: Story = {
+  args: { clickable: true, label: 'Keyboard chip' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chip = canvas.getByRole('checkbox');
+    chip.focus();
+    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard(' ');
+  },
+};
+
+export const RemoveClick: Story = {
+  args: { removable: true, label: 'Remove moi' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const removeBtn = canvas.getByLabelText('Supprimer');
+    await userEvent.click(removeBtn);
+  },
+};
+
+export const DisabledClickable: Story = {
+  args: { clickable: true, disabled: true, label: 'Disabled' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chip = canvas.getByRole('checkbox');
+    await expect(chip).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(chip);
+  },
+};
+
+export const SelectedOutline: Story = {
+  args: { variant: 'outline', selected: true, clickable: true, label: 'Active' },
 };

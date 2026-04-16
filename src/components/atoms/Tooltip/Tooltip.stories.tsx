@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Tooltip } from './Tooltip';
 import { Button } from '../Button';
 
@@ -73,4 +74,68 @@ export const Disabled: Story = {
       </Tooltip>
     </div>
   ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const HoverShowHide: Story = {
+  render: () => (
+    <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
+      <Tooltip content="Visible au survol" placement="top" delay={0}>
+        <Button variant="secondary">Hover test</Button>
+      </Tooltip>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByText('Hover test');
+    const wrapper = trigger.closest('span');
+    // hover to show
+    await userEvent.hover(wrapper!);
+    await new Promise((r) => setTimeout(r, 50));
+    const tooltip = canvasElement.querySelector('[role="tooltip"]');
+    await expect(tooltip).toBeInTheDocument();
+    // unhover to hide
+    await userEvent.unhover(wrapper!);
+  },
+};
+
+export const FocusShowBlurHide: Story = {
+  render: () => (
+    <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
+      <Tooltip content="Focus visible" placement="bottom" delay={0}>
+        <Button variant="secondary">Focus test</Button>
+      </Tooltip>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByText('Focus test');
+    const wrapper = btn.closest('span');
+    // focus → show
+    wrapper!.focus();
+    await new Promise((r) => setTimeout(r, 50));
+    // blur → hide
+    wrapper!.blur();
+  },
+};
+
+export const DisabledNoShow: Story = {
+  render: () => (
+    <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
+      <Tooltip content="Hidden" placement="top" disabled delay={0}>
+        <Button variant="secondary">Disabled tooltip</Button>
+      </Tooltip>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const wrapper = canvas.getByText('Disabled tooltip').closest('span');
+    await userEvent.hover(wrapper!);
+    await new Promise((r) => setTimeout(r, 50));
+    // tooltip element should not exist when disabled
+    const tooltip = canvasElement.querySelector('[role="tooltip"]');
+    await expect(tooltip).toBeNull();
+    await userEvent.unhover(wrapper!);
+  },
 };

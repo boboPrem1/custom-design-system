@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Button } from './Button';
 import { ICON_NAMES } from '../Icon';
 
@@ -91,4 +92,44 @@ export const LoadingStates: Story = {
       ))}
     </div>
   ),
+};
+
+// ─── 7.3 — Play functions ──────────────────────────────────────────────────────
+
+/** Vérifie qu'un clic clavier (Enter) déclenche l'action */
+export const KeyboardClick: Story = {
+  args: { children: 'Valider', id: 'btn-keyboard-click' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Valider' });
+
+    // Focus puis Enter
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await userEvent.keyboard('{Enter}');
+  },
+};
+
+/** Vérifie que le bouton désactivé ne répond pas aux clics */
+export const DisabledNotClickable: Story = {
+  args: { children: 'Désactivé', disabled: true, id: 'btn-disabled-test' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: 'Désactivé' });
+
+    await expect(button).toBeDisabled();
+    await expect(button).toHaveAttribute('aria-disabled');
+  },
+};
+
+/** Vérifie les attributs ARIA du bouton en état loading */
+export const LoadingA11y: Story = {
+  args: { children: 'Chargement', loading: true, id: 'btn-loading-a11y' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+
+    await expect(button).toHaveAttribute('aria-busy', 'true');
+    await expect(button).toBeDisabled();
+  },
 };

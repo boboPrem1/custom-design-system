@@ -166,16 +166,16 @@
 
 **But** : Assembler les organisms en mises en page completes, agnostiques du contenu reel.
 
-- [ ] **5.1 — Dashboard** : Sidebar + topbar + zone contenu grid, sidebar collapsible responsive `Web`
-- [ ] **5.2 — Auth (login/register/reset)** : layout centre desktop / pleine page mobile, formulaire + brand `Web, Mobile`
-- [ ] **5.3 — Article / Doc** : prose centree max-width 720px + TOC sticky + breadcrumb + meta + nav prev/next `Web, Graphique`
-- [ ] **5.4 — Settings** : nav sections gauche (tabs mobile) + contenu droite + footer Save/Cancel sticky `Web, Mobile`
-- [ ] **5.5 — Landing page** : Hero + Features + Social proof + Pricing + CTA finale + Footer `Web, Graphique`
-- [ ] **5.6 — Onboarding flow** : multi-etapes + progress bar + skip + completion screen `Web, Mobile`
-- [ ] **5.7 — Mobile app screen** : status bar safe area + tab bar + contenu scrollable + FAB optionnel `Mobile`
-- [ ] **5.8 — Email template** : max-width 600px, inline CSS, header logo + hero + contenu + footer legal `Graphique`
-- [ ] **5.9 — Social post** : ratios 1:1 / 9:16 / 16:9 (Instagram/LinkedIn/YouTube), logo + headline + CTA `Graphique`
-- [ ] **5.10 — Presentation** : slides titre/contenu/data, maitre slide avec zones configurables `Graphique`
+- [x] **5.1 — Dashboard** : Sidebar + topbar + zone contenu grid, sidebar collapsible responsive `Web`
+- [x] **5.2 — Auth (login/register/reset)** : layout centre desktop / pleine page mobile, formulaire + brand `Web, Mobile`
+- [x] **5.3 — Article / Doc** : prose centree max-width 720px + TOC sticky + breadcrumb + meta + nav prev/next `Web, Graphique`
+- [x] **5.4 — Settings** : nav sections gauche (tabs mobile) + contenu droite + footer Save/Cancel sticky `Web, Mobile`
+- [x] **5.5 — Landing page** : Hero + Features + Social proof + Pricing + CTA finale + Footer `Web, Graphique`
+- [x] **5.6 — Onboarding flow** : multi-etapes + progress bar + skip + completion screen `Web, Mobile`
+- [x] **5.7 — Mobile app screen** : status bar safe area + tab bar + contenu scrollable + FAB optionnel `Mobile`
+- [x] **5.8 — Email template** : max-width 600px, inline CSS, header logo + hero + contenu + footer legal `Graphique`
+- [x] **5.9 — Social post** : ratios 1:1 / 9:16 / 16:9 (Instagram/LinkedIn/YouTube), logo + headline + CTA `Graphique`
+- [x] **5.10 — Presentation** : slides titre/contenu/data, maitre slide avec zones configurables `Graphique`
 
 **Livrable** : 10 templates navigables dans Storybook avec responsive preview.
 
@@ -185,13 +185,13 @@
 
 **But** : Composants specifiques au design graphique — print, social, branding.
 
-- [ ] **6.1 — Color palette** : grille complete des couleurs systeme avec hex + variable CSS `Graphique`
-- [ ] **6.2 — Type specimen** : tous les niveaux typographiques avec tokens correspondants `Graphique`
-- [ ] **6.3 — Icon grid** : set complet en grille 24x24, categorise (nav/action/statut), export SVG/PNG `Graphique`
-- [ ] **6.4 — Logo lockup** : horizontal/vertical/icon-only + zone de protection + fond clair/sombre/colore `Graphique`
-- [ ] **6.5 — Brand card** : recapitulatif identite : couleurs + typos + logo + ton `Graphique`
-- [ ] **6.6 — Poster layout** : grille 12 colonnes, zones titre/visuel/texte/CTA, marges configurables (A4/A3) `Graphique`
-- [ ] **6.7 — OG image** : template 1200x630px, logo + titre dynamique + sous-titre + fond brand `Graphique`
+- [x] **6.1 — Color palette** : grille complete des couleurs systeme avec hex + variable CSS `Graphique`
+- [x] **6.2 — Type specimen** : tous les niveaux typographiques avec tokens correspondants `Graphique`
+- [x] **6.3 — Icon grid** : set complet en grille 24x24, categorise (nav/action/statut), export SVG/PNG `Graphique`
+- [x] **6.4 — Logo lockup** : horizontal/vertical/icon-only + zone de protection + fond clair/sombre/colore `Graphique`
+- [x] **6.5 — Brand card** : recapitulatif identite : couleurs + typos + logo + ton `Graphique`
+- [x] **6.6 — Poster layout** : grille 12 colonnes, zones titre/visuel/texte/CTA, marges configurables (A4/A3) `Graphique`
+- [x] **6.7 — OG image** : template 1200x630px, logo + titre dynamique + sous-titre + fond brand `Graphique`
 
 **Livrable** : 7 composants graphiques exportables, servant de reference visuelle pour les collaborateurs.
 
@@ -201,13 +201,13 @@
 
 **But** : Tests, documentation, et packaging final.
 
-- [ ] **7.1 — Tests d'accessibilite** : Passer addon a11y en mode `error`, corriger toutes les violations WCAG 2.1 AA
-- [ ] **7.2 — Tests visuels** : Configurer Chromatic pour regression visuelle automatique
-- [ ] **7.3 — Tests d'interaction** : Ajouter des `play` functions sur les composants interactifs cles (forms, modals, dropdowns)
-- [ ] **7.4 — Theme sombre** : Verifier que tous les composants fonctionnent en dark mode via les tokens
-- [ ] **7.5 — Documentation Autodocs** : Verifier que chaque composant a sa page de doc generee avec exemples et controles
-- [ ] **7.6 — Guide de contribution** : README avec conventions de nommage, structure de fichiers, process de creation de composant
-- [ ] **7.7 — Build et export** : `pnpm build-storybook` pour site statique deployable
+- [x] **7.1 — Tests d'accessibilite** : Passer addon a11y en mode `error`, corriger toutes les violations WCAG 2.1 AA
+- [x] **7.2 — Tests visuels** : Configurer Chromatic pour regression visuelle automatique
+- [x] **7.3 — Tests d'interaction** : Ajouter des `play` functions sur les composants interactifs cles (forms, modals, dropdowns)
+- [x] **7.4 — Theme sombre** : Verifier que tous les composants fonctionnent en dark mode via les tokens
+- [x] **7.5 — Documentation Autodocs** : Verifier que chaque composant a sa page de doc generee avec exemples et controles
+- [x] **7.6 — Guide de contribution** : README avec conventions de nommage, structure de fichiers, process de creation de composant
+- [x] **7.7 — Build et export** : `pnpm build-storybook` pour site statique deployable
 
 ---
 
@@ -218,9 +218,9 @@
 - [x] **Phase 2** — Atoms (22 composants) — depends Phase 1
 - [ ] **Phase 3** — Molecules (19 composants) — depends Phase 2
 - [x] **Phase 4** — Organisms (20 composants) — depends Phase 3
-- [ ] **Phase 5** — Templates (10 layouts) — depends Phase 4
-- [ ] **Phase 6** — Graphic extras (7 composants) — depends Phase 1 + certains atoms
-- [ ] **Phase 7** — Finalisation et qualite — depends toutes
+- [x] **Phase 5** — Templates (10 layouts) — depends Phase 4
+- [x] **Phase 6** — Graphic extras (7 composants) — depends Phase 1 + certains atoms
+- [x] **Phase 7** — Finalisation et qualite — depends toutes
 
 **TOTAL** : ~86 composants + 8 stories tokens + 7 graphic
 

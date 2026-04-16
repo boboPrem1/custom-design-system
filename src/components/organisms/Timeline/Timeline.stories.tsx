@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { within, expect } from 'storybook/test';
 import { Timeline } from './Timeline';
 
 const ITEMS = [
@@ -21,4 +22,33 @@ export const Vertical: Story = { args: { orientation: 'vertical' } };
 export const Horizontal: Story = {
   args: { orientation: 'horizontal', items: ITEMS.slice(0, 4) },
   decorators: [(Story) => <div style={{ overflowX: 'auto', padding: 'var(--spacing-8)' }}><Story /></div>],
+};
+
+export const Alternating: Story = {
+  args: { orientation: 'alternating' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Projet créé')).toBeInTheDocument();
+    await expect(canvas.getByText('Phase 2 — Atoms')).toBeInTheDocument();
+  },
+};
+
+export const MinimalItems: Story = {
+  args: {
+    items: [
+      { id: 'a', title: 'Étape simple' },
+      { id: 'b', title: 'Étape avec statut', status: 'warning' as const, statusLabel: 'Attention', date: '2024', description: 'Desc' },
+      { id: 'c', title: 'Erreur', status: 'error' as const, icon: <span>🔴</span> },
+    ],
+  },
+};
+
+export const AlternatingMinimal: Story = {
+  args: {
+    orientation: 'alternating',
+    items: [
+      { id: 'x', title: 'Sans desc ni date' },
+      { id: 'y', title: 'Avec tout', date: '2024', description: 'Full', status: 'info' as const, statusLabel: 'Info' },
+    ],
+  },
 };

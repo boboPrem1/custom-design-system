@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { userEvent, within, expect } from 'storybook/test';
 import { FileUpload, type UploadFile } from './FileUpload';
 
 const meta = {
@@ -59,4 +60,53 @@ export const Disabled: Story = {
       <FileUpload disabled onFilesChange={() => {}} />
     </div>
   ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickDropzone: Story = {
+  render: () => (
+    <div style={{ maxWidth: 480 }}>
+      <FileUpload onFilesChange={() => {}} maxSize={10 * 1024 * 1024} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const zone = canvas.getByLabelText('Zone de dépôt de fichiers');
+    await userEvent.click(zone);
+  },
+};
+
+export const RemoveFile: Story = {
+  render: () => (
+    <div style={{ maxWidth: 480 }}>
+      <FileUpload
+        files={[
+          { id: '1', name: 'doc.pdf', size: 1024, progress: 100 },
+          { id: '2', name: 'img.png', size: 2048, error: 'Trop gros' },
+        ]}
+        onFilesChange={() => {}}
+        onRemoveFile={() => {}}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const removeBtn = canvas.getByLabelText('Supprimer doc.pdf');
+    await userEvent.click(removeBtn);
+  },
+};
+
+export const KeyboardOpen: Story = {
+  render: () => (
+    <div style={{ maxWidth: 480 }}>
+      <FileUpload onFilesChange={() => {}} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const zone = canvas.getByLabelText('Zone de dépôt de fichiers');
+    (zone as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+  },
 };

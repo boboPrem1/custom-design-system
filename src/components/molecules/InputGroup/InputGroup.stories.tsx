@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import { InputGroup } from './InputGroup';
 
 const meta = {
@@ -70,4 +71,23 @@ export const BothSides: Story = {
       />
     </div>
   ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const TypeAndClickButton: Story = {
+  render: () => (
+    <div style={{ width: 320 }}>
+      <InputGroup
+        placeholder="Code promo"
+        suffix={{ type: 'button', content: 'Appliquer', onClick: () => {} }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('Code promo');
+    await userEvent.type(input, 'PROMO2024');
+    await userEvent.click(canvas.getByText('Appliquer'));
+  },
 };

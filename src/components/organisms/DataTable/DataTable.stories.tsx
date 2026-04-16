@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { DataTable } from './DataTable';
 import { Badge } from '../../atoms/Badge';
 
@@ -67,3 +68,49 @@ export const FilterableAndPaginated: Story = {
 };
 export const Loading: Story = { args: { loading: true } };
 export const Empty: Story = { args: { data: [], emptyLabel: 'Aucun utilisateur trouvé' } };
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const SortByName: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // click sort on Nom → asc
+    const nameHeader = canvas.getByText('Nom');
+    await userEvent.click(nameHeader);
+    // click again → desc
+    await userEvent.click(nameHeader);
+    // click third time → reset
+    await userEvent.click(nameHeader);
+  },
+};
+
+export const FilterByName: Story = {
+  args: {
+    filterable: true,
+    columns: COLUMNS.map((c) => ({ ...c, filterable: true })),
+  },
+  play: async ({ canvasElement }) => {
+    const inputs = canvasElement.querySelectorAll('input[placeholder="Filtrer…"]');
+    const nameFilter = inputs[0] as HTMLInputElement;
+    await userEvent.click(nameFilter);
+    await userEvent.type(nameFilter, 'Alice');
+    // should show only 1 row
+    const rows = canvasElement.querySelectorAll('tbody tr');
+    await expect(rows.length).toBe(1);
+  },
+};
+
+export const SelectAll: Story = {
+  render: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [selected, setSelected] = useState<(string | number)[]>([]);
+    return <DataTable columns={COLUMNS} data={DATA} keyField="id" selectable selectedKeys={selected} onSelectionChange={setSelected} />;
+  },
+  play: async ({ canvasElement }) => {
+    // click header checkbox → select all
+    const checkboxes = canvasElement.querySelectorAll('input[type="checkbox"]');
+    if (checkboxes[0]) await userEvent.click(checkboxes[0]);
+    // click a row checkbox → deselect one
+    if (checkboxes[1]) await userEvent.click(checkboxes[1]);
+  },
+};

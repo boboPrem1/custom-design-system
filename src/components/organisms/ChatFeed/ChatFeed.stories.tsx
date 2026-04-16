@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { ChatFeed } from './ChatFeed';
 import { type ChatMessage } from './ChatFeed';
 
@@ -31,5 +32,45 @@ export const Interactive: Story = {
       { id: String(Date.now()), authorName: 'Moi', authorInitials: 'MO', content: text, timestamp: new Date().toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' }), sent: true },
     ]);
     return <div style={{ height: 480 }}><ChatFeed messages={msgs} onSend={send} /></div>;
+  },
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const TypeAndSend: Story = {
+  args: { onSend: () => {} },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('Écrire un message…');
+    await userEvent.type(input, 'Test message');
+    // click send button
+    const sendBtn = canvasElement.querySelector('button:not(:disabled)');
+    if (sendBtn) await userEvent.click(sendBtn);
+  },
+};
+
+export const EnterToSend: Story = {
+  args: { onSend: () => {} },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('Écrire un message…');
+    await userEvent.type(input, 'Enter message');
+    await userEvent.keyboard('{Enter}');
+    // input should be cleared after send
+    await expect(input).toHaveValue('');
+  },
+};
+
+export const EmptyNotSent: Story = {
+  args: { onSend: () => {} },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('Écrire un message…');
+    // try sending empty
+    await userEvent.click(input);
+    await userEvent.keyboard('{Enter}');
+    // try clicking send with spaces only
+    await userEvent.type(input, '   ');
+    await userEvent.keyboard('{Enter}');
   },
 };

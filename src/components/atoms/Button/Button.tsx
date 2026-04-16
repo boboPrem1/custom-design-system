@@ -149,7 +149,13 @@ export const Button = ({
         @keyframes btn-spin { to { transform: rotate(360deg); } }
         button:not(:disabled):hover { filter: brightness(0.92); }
       `}</style>
-      <button {...props} disabled={isDisabled} style={baseStyle}>
+      <button
+        {...props}
+        disabled={isDisabled}
+        aria-disabled={isDisabled || undefined}
+        aria-busy={loading || undefined}
+        style={baseStyle}
+      >
         {loading && <Spinner size={iconSize} />}
         {!loading && iconOnly && <Icon name={iconOnly} size={iconSize} />}
         {!iconOnly && (

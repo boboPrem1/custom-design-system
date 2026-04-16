@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Button } from '../../atoms/Button';
 import { Badge } from '../../atoms/Badge';
 import { Card } from './Card';
@@ -92,4 +93,55 @@ export const Elevated: Story = {
       </Card>
     </div>
   ),
+};
+
+export const NoBorder: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Card header="Sans bordure" bordered={false} elevated>
+        <p style={{ margin: 0 }}>Pas de bordure.</p>
+      </Card>
+    </div>
+  ),
+};
+
+export const AllPaddings: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+      {(['none', 'sm', 'md', 'lg'] as const).map((p) => (
+        <Card key={p} padding={p} header={`padding=${p}`}><p style={{ margin: 0 }}>Contenu</p></Card>
+      ))}
+    </div>
+  ),
+};
+
+export const ActionOnly: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Card action={<Badge label="new" semantic="success" />}><p style={{ margin: 0 }}>Action header sans titre</p></Card>
+    </div>
+  ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickableKeyboard: Story = {
+  render: () => (
+    <div style={{ width: 320 }}>
+      <Card header="Carte cliquable" clickable elevated onClick={() => {}}>
+        <p style={{ margin: 0 }}>Focus + Enter = clic</p>
+      </Card>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole('button');
+    // hover
+    await userEvent.hover(card);
+    await userEvent.unhover(card);
+    // keyboard enter
+    card.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(card).toHaveAttribute('tabindex', '0');
+  },
 };

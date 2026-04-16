@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import { Radio, RadioGroup } from './Radio';
 
 const meta = {
@@ -61,7 +62,6 @@ export const WithDisabledOption: Story = {
 };
 
 export const GroupDisabled: Story = {
-  args: { disabled: true },
   args: { disabled: true, options: [
     { value: 'a', label: 'Option A' },
     { value: 'b', label: 'Option B' },
@@ -82,5 +82,21 @@ export const SingleRadio: Story = {
         onChange={() => setChecked(true)}
       />
     );
+  },
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickOptions: Story = {
+  render: (args) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [value, setValue] = useState('a');
+    return <RadioGroup {...args} value={value} onChange={setValue} />;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Option B'));
+    await userEvent.click(canvas.getByText('Option C'));
+    await userEvent.click(canvas.getByText('Option A'));
   },
 };

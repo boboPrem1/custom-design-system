@@ -13,16 +13,31 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 export default defineConfig({
   plugins: [react()],
   test: {
+    // Coverage config (option Vitest, doit être dans test{})
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/**',
+        'storybook-static/**',
+        '**/*.stories.*',
+        '**/*.config.*',
+        '.storybook/**',
+      ],
+    },
     projects: [{
       extends: true,
       plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
+        // The plugin will run tests for the stories defined in your Storybook config
+        // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+        storybookTest({
+          configDir: path.join(dirname, '.storybook')
+        }),
+      ],
       test: {
         name: 'storybook',
+        // Fichier d'initialisation : applique les annotations globales Storybook
+        setupFiles: ['.storybook/vitest.setup.ts'],
         browser: {
           enabled: true,
           headless: true,
@@ -33,5 +48,5 @@ export default defineConfig({
         }
       }
     }]
-  }
+  },
 });

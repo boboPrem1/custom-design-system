@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Navbar } from './Navbar';
 import { Avatar } from '../../atoms/Avatar';
 
@@ -30,3 +31,19 @@ export const WithActions: Story = {
 };
 export const Sticky: Story = { args: { sticky: true } };
 export const MinimalLinks: Story = { args: { items: [{ label: 'Docs', href: '#' }, { label: 'Blog', href: '#' }] } };
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const HamburgerToggle: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const hamburger = canvas.getByLabelText('Menu');
+    // Force visible (normally hidden on desktop via CSS)
+    (hamburger as HTMLElement).style.display = 'flex';
+    await userEvent.click(hamburger);
+    await expect(hamburger).toHaveAttribute('aria-expanded', 'true');
+    // close
+    await userEvent.click(hamburger);
+    await expect(hamburger).toHaveAttribute('aria-expanded', 'false');
+  },
+};

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Footer } from './Footer';
 
 const meta = {
@@ -14,8 +15,8 @@ const meta = {
       { title: 'Entreprise', links: [{ label: 'À propos',   href: '#' }, { label: 'Contact',     href: '#' }, { label: 'Carrières',   href: '#' }] },
     ],
     socials: [
-      { icon: 'code' as const, href: '#', label: 'GitHub' },
-      { icon: 'link' as const, href: '#', label: 'Twitter' },
+      { icon: 'code' as const, href: 'https://github.com', label: 'GitHub' },
+      { icon: 'link' as const, href: 'https://twitter.com', label: 'Twitter' },
     ],
   },
 } satisfies Meta<typeof Footer>;
@@ -24,3 +25,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Full: Story = {};
 export const Minimal: Story = { args: { columns: [], socials: [], tagline: undefined } };
+export const NoTagline: Story = { args: { tagline: undefined } };
+export const NoSocials: Story = { args: { socials: [] } };
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ToggleColumn: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Click column title to toggle accordion on mobile
+    const colBtn = canvas.getByText('Produit');
+    await userEvent.click(colBtn);
+    // click again to close
+    await userEvent.click(colBtn);
+    // toggle another
+    await userEvent.click(canvas.getByText('Ressources'));
+  },
+};

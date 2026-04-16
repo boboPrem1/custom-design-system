@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import { ListItem } from './ListItem';
 
 const meta = {
@@ -63,4 +64,20 @@ export const Disabled: Story = {
       <ListItem title="Option désactivée" subtitle="Non disponible" icon="close" clickable disabled />
     </div>
   ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickItems: Story = {
+  render: () => (
+    <div style={{ maxWidth: 420, border: '1px solid var(--color-border-primary)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+      <ListItem title="Paramètres" icon="settings" clickable chevron onClick={() => {}} />
+      <ListItem title="Profil" icon="user" clickable chevron onClick={() => {}} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Paramètres'));
+    await userEvent.click(canvas.getByText('Profil'));
+  },
 };

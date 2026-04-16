@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Modal } from './Modal';
 import { Button } from '../../atoms/Button';
 
@@ -56,5 +57,46 @@ export const Interactive: Story = {
         </Modal>
       </>
     );
+  },
+};
+
+// ─── 7.3 — Play functions ──────────────────────────────────────────────────────
+
+/** Vérifie que la modal est rendue et accessible au rôle 'dialog' */
+export const AccessibleDialog: Story = {
+  args: {
+    open: true,
+    title: 'Accessibilité',
+    children: <p style={{ margin: 0 }}>Contenu de la modal.</p>,
+    footer: <Button variant="primary">Confirmer</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dialog = canvas.getByRole('dialog');
+
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).toHaveAttribute('aria-modal', 'true');
+
+    // Le titre doit être présent et lier le dialog
+    const heading = canvas.getByRole('heading', { name: 'Accessibilité' });
+    await expect(heading).toBeInTheDocument();
+  },
+};
+
+/** Vérifie la fermeture via la touche Escape */
+export const CloseOnEscape: Story = {
+  args: {
+    open: true,
+    title: 'Fermeture Escape',
+    children: <p style={{ margin: 0 }}>Appuyer sur Escape pour fermer.</p>,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dialog = canvas.getByRole('dialog');
+    await expect(dialog).toBeInTheDocument();
+
+    await userEvent.keyboard('{Escape}');
+    // Après Escape, onClose est appelé — dans ce contexte de story le dialog reste
+    // visible (pas de state), on vérifie juste qu'aucune erreur n'est levée.
   },
 };

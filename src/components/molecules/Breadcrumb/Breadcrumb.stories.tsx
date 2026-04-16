@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import { Breadcrumb } from './Breadcrumb';
 
 const meta = {
@@ -70,10 +71,29 @@ export const WithClickHandlers: Story = {
   render: () => (
     <Breadcrumb
       items={[
-        { label: 'Accueil', onClick: () => alert('Accueil') },
-        { label: 'Composants', onClick: () => alert('Composants') },
+        { label: 'Accueil', onClick: () => {} },
+        { label: 'Composants', onClick: () => {} },
         { label: 'Breadcrumb' },
       ]}
     />
   ),
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const ClickItem: Story = {
+  render: () => (
+    <Breadcrumb
+      items={[
+        { label: 'Home', onClick: () => {} },
+        { label: 'Section', onClick: () => {} },
+        { label: 'Current' },
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Home'));
+    await userEvent.click(canvas.getByText('Section'));
+  },
 };

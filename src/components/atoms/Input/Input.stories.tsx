@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Input } from './Input';
 import { ICON_NAMES } from '../Icon';
 
@@ -72,4 +73,49 @@ export const AllStates: Story = {
       ))}
     </div>
   ),
+};
+
+// ─── 7.3 — Play functions ──────────────────────────────────────────────────────
+
+/** Saisie de texte et vérification de la valeur */
+export const TypeText: Story = {
+  args: { placeholder: 'Saisir ici…', id: 'input-type-test' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+
+    await userEvent.click(input);
+    await userEvent.type(input, 'Bonjour le monde');
+    await expect(input).toHaveValue('Bonjour le monde');
+  },
+};
+
+/** Vérification de l'état d'erreur et du message associé */
+export const ErrorState: Story = {
+  args: {
+    state: 'error',
+    errorMessage: 'Email invalide.',
+    defaultValue: 'pas-un-email',
+    type: 'email',
+    id: 'input-error-test',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+    const errorMsg = canvas.getByRole('alert');
+
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+    await expect(errorMsg).toHaveTextContent('Email invalide.');
+  },
+};
+
+/** Vérification que l'input désactivé est inaccessible */
+export const DisabledState: Story = {
+  args: { state: 'disabled', defaultValue: 'Non modifiable', id: 'input-disabled-test' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+
+    await expect(input).toBeDisabled();
+  },
 };

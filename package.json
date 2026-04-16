@@ -11,7 +11,10 @@
     "tokens": "node src/tokens/build-tokens.js",
     "prestorybook": "pnpm tokens",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "pnpm tokens && storybook build"
+    "build-storybook": "pnpm tokens && storybook build",
+    "test": "vitest --project=storybook",
+    "test:ui": "vitest --project=storybook --ui",
+    "test:coverage": "vitest --project=storybook --coverage"
   },
   "dependencies": {
     "react": "^19.2.4",
@@ -31,6 +34,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "^4.1.4",
     "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/ui": "4.1.4",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",

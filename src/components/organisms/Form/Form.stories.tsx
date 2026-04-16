@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { Form } from './Form';
 
 const meta = {
@@ -75,5 +76,95 @@ export const ValidationErrors: Story = {
       ],
     }],
     submitLabel: 'Valider',
+  },
+};
+
+export const WithCancel: Story = {
+  args: {
+    sections: [{ id: 'c', fields: [{ id: 'x', label: 'Nom', required: true }] }],
+    cancelLabel: 'Annuler',
+    onCancel: () => {},
+  },
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const SubmitEmpty: Story = {
+  args: {
+    sections: [{
+      id: 'val',
+      fields: [
+        { id: 'name', label: 'Nom', required: true },
+        { id: 'email', label: 'E-mail', type: 'email' as const, required: true },
+        { id: 'bio', label: 'Bio', type: 'textarea' as const },
+        { id: 'role', label: 'Rôle', type: 'select' as const, required: true, options: [{ value: 'admin', label: 'Admin' }] },
+        { id: 'agree', label: 'Accepter', type: 'checkbox' as const, required: true },
+      ],
+    }],
+    submitLabel: 'Envoyer',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // submit without filling → validation errors
+    const submitBtn = canvas.getByRole('button', { name: 'Envoyer' });
+    await userEvent.click(submitBtn);
+    // error summary should appear
+    await expect(canvas.getByText(/erreur/i)).toBeInTheDocument();
+  },
+};
+
+export const FillAndSubmit: Story = {
+  args: {
+    sections: [{
+      id: 'fill',
+      fields: [
+        { id: 'name', label: 'Nom', required: true },
+        { id: 'email', label: 'E-mail', type: 'email' as const, required: true },
+        { id: 'bio', label: 'Bio', type: 'textarea' as const, hint: '280 max' },
+        { id: 'role', label: 'Rôle', type: 'select' as const, required: true, options: [{ value: 'admin', label: 'Admin' }] },
+        { id: 'agree', label: 'Accepter', type: 'checkbox' as const, required: true },
+        { id: 'age', label: 'Âge', type: 'number' as const, validate: (v) => Number(v) < 18 ? 'Trop jeune' : undefined },
+      ],
+    }],
+    submitLabel: 'Envoyer',
+    onSubmit: async () => { await new Promise((r) => setTimeout(r, 100)); },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // fill all fields
+    await userEvent.type(canvas.getByLabelText(/Nom/), 'Jean Dupont');
+    await userEvent.type(canvas.getByLabelText(/E-mail/), 'jean@example.com');
+    const bio = canvasElement.querySelector('textarea');
+    if (bio) await userEvent.type(bio, 'Ma bio');
+    const select = canvasElement.querySelector('select');
+    if (select) await userEvent.selectOptions(select, 'admin');
+    const checkbox = canvasElement.querySelector('input[type="checkbox"]');
+    if (checkbox) await userEvent.click(checkbox);
+    await userEvent.type(canvas.getByLabelText(/Âge/), '25');
+    // submit
+    await userEvent.click(canvas.getByRole('button', { name: 'Envoyer' }));
+  },
+};
+
+export const BlurValidation: Story = {
+  args: {
+    sections: [{
+      id: 'blur',
+      fields: [
+        { id: 'email', label: 'E-mail', type: 'email' as const, required: true },
+        { id: 'pass', label: 'Mot de passe', type: 'password' as const, required: true },
+      ],
+    }],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const emailInput = canvas.getByLabelText(/E-mail/);
+    // type invalid email, then blur
+    await userEvent.type(emailInput, 'bad');
+    await userEvent.tab();
+    // password field: focus and blur empty
+    const passInput = canvas.getByLabelText(/Mot de passe/);
+    await userEvent.click(passInput);
+    await userEvent.tab();
   },
 };

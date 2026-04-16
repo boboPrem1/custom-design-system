@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within, expect } from 'storybook/test';
 import { OnboardingTemplate } from './OnboardingTemplate';
 
 /* Input avec label — utilise des champs natifs pour éviter les couplages à l'atom */
@@ -61,3 +62,62 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const NoSkip: Story = { args: { onSkip: undefined } };
+
+export const WithValidation: Story = {
+  args: {
+    steps: [
+      { id: 'v1', title: 'Étape validée', content: <p>Contenu</p>, validate: async () => 'Erreur de validation' },
+      { id: 'v2', title: 'Étape 2', content: <p>OK</p> },
+    ],
+  },
+};
+
+// ─── Play functions ──────────────────────────────────────────────────────
+
+export const NavigateNextBack: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // click Continuer to go to step 2
+    await userEvent.click(canvas.getByText('Continuer →'));
+    await expect(canvas.getByText(/Étape 2 sur/)).toBeInTheDocument();
+    // click Précédent to go back
+    await userEvent.click(canvas.getByText('← Précédent'));
+    await expect(canvas.getByText(/Étape 1 sur/)).toBeInTheDocument();
+  },
+};
+
+export const CompleteFlow: Story = {
+  args: {
+    steps: [
+      { id: 'only', title: 'Unique étape', content: <p>Single step</p> },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // click Terminer (isLast)
+    await userEvent.click(canvas.getByText('Terminer'));
+    // should show completion screen
+    await expect(canvas.getByText('Configuration terminée !')).toBeInTheDocument();
+  },
+};
+
+export const SkipButton: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const skipBtn = canvas.getByText('Passer la configuration →');
+    await userEvent.click(skipBtn);
+  },
+};
+
+export const ValidationError: Story = {
+  args: {
+    steps: [
+      { id: 'val', title: 'Validation', content: <p>Test</p>, validate: async () => 'Champ requis' },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByText('Terminer'));
+    await expect(canvas.getByText('Champ requis')).toBeInTheDocument();
+  },
+};
